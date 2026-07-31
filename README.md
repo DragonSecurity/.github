@@ -31,3 +31,5 @@ git commit -s -m "docs: fix a typo"
 A `DCO` status check enforces this on the default branch of every
 repository. See [CONTRIBUTING.md](CONTRIBUTING.md) for automation and
 for how to repair a branch you forgot to sign.
+
+<!-- dco smoke test -->
