@@ -14,6 +14,19 @@ always wins.
 | [`SECURITY.md`](SECURITY.md) | Vulnerability reporting and disclosure |
 | [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) | Default PR template |
 
+Licensing is not a community health file — GitHub cannot apply one
+org-wide, so each repository carries its own copy.
+
+| File | Purpose |
+| --- | --- |
+| [`templates/LICENSE.apache2`](templates/LICENSE.apache2) | Canonical Apache-2.0. Copy to `LICENSE` in new repositories |
+| [`scripts/license-audit.sh`](scripts/license-audit.sh) | Checks every repo for that exact text |
+| [`.github/workflows/license-audit.yml`](.github/workflows/license-audit.yml) | Runs the audit weekly, opens an issue on drift |
+
+The audit needs an `ORG_AUDIT_TOKEN` Actions secret with read access to
+all organization repositories — the default `GITHUB_TOKEN` is scoped to
+this repository alone and cannot see the private ones.
+
 This repository is public because GitHub only applies default community
 health files from a public `.github` repository. It contains no code and
 nothing sensitive.
