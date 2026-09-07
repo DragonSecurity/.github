@@ -16,20 +16,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # The default GITHUB_TOKEN is scoped to this repository only and cannot
+      # enumerate the org's private repos. The org-wide CI app can, and its
+      # token is minted per run rather than stored and rotated by hand.
+      - name: Mint an org-scoped token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       - name: Run audit
         id: audit
         env:
-          # The default GITHUB_TOKEN is scoped to this repository only and
-          # cannot enumerate the org's private repos. ORG_AUDIT_TOKEN must be
-          # a PAT (or App token) with read access to all repositories.
-          GH_TOKEN: ${{ secrets.ORG_AUDIT_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           ORG: ${{ github.repository_owner }}
         run: |
-          if [ -z "${GH_TOKEN:-}" ]; then
-            echo "::error::ORG_AUDIT_TOKEN is not set. Create a PAT with read access" \
-                 "to all org repositories and add it as an Actions secret."
-            exit 1
-          fi
           set +e
           ./scripts/license-audit.sh > report.md
           echo "status=$?" >> "$GITHUB_OUTPUT"

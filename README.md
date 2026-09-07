@@ -23,9 +23,12 @@ org-wide, so each repository carries its own copy.
 | [`scripts/license-audit.sh`](scripts/license-audit.sh) | Checks every repo for that exact text |
 | [`.github/workflows/license-audit.yml`](.github/workflows/license-audit.yml) | Runs the audit weekly, opens an issue on drift |
 
-The audit needs an `ORG_AUDIT_TOKEN` Actions secret with read access to
-all organization repositories — the default `GITHUB_TOKEN` is scoped to
-this repository alone and cannot see the private ones.
+The audit reads every repository in the organization, which the default
+`GITHUB_TOKEN` cannot do — it is scoped to this repository alone and
+cannot see the private ones. The workflow mints a token from the
+org-wide CI GitHub App instead, using the `CI_APP_ID` variable and
+`CI_APP_PRIVATE_KEY` secret. The app must be installed on all
+repositories with `Contents: read`.
 
 This repository is public because GitHub only applies default community
 health files from a public `.github` repository. It contains no code and
